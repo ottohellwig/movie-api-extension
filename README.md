@@ -1,149 +1,73 @@
-# [knex.js](https://knex.github.io/documentation/)
+<div align="center">
 
-[![npm version](http://img.shields.io/npm/v/knex.svg)](https://npmjs.org/package/knex)
-[![npm downloads](https://img.shields.io/npm/dm/knex.svg)](https://npmjs.org/package/knex)
-![](https://github.com/knex/knex/workflows/CI/badge.svg)
-[![Coverage Status](https://coveralls.io/repos/knex/knex/badge.svg?branch=master)](https://coveralls.io/r/knex/knex?branch=master)
-[![Dependencies Status](https://img.shields.io/librariesio/github/knex/knex)](https://libraries.io/npm/knex)
-[![Gitter chat](https://badges.gitter.im/tgriesser/knex.svg)](https://gitter.im/tgriesser/knex)
+  # Movie API Extension
 
-> **A SQL query builder that is _flexible_, _portable_, and _fun_ to use!**
+  Extension of the IMDb clone REST API with new endpoints, additional data and accompanying Swagger documentation.
 
-A batteries-included, multi-dialect (PostgreSQL, MySQL, CockroachDB, MSSQL, SQLite3, Oracle (including Oracle Wallet Authentication)) query builder for
-Node.js, featuring:
+  ![MySQL](https://img.shields.io/badge/mysql-%2300f.svg?style=for-the-badge&logo=mysql&logoColor=white)&nbsp;
+  ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)&nbsp;
+  [![Knex.js](https://img.shields.io/badge/Knex.js-blue?style=for-the-badge&logo=Knex.js&logoColor=White)](https://knexjs.org/)&nbsp;
+  ![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)&nbsp;
+  ![Insomnia](https://img.shields.io/badge/Insomnia-black?style=for-the-badge&logo=insomnia&logoColor=5849BE)
+  
+  ![image](https://github.com/ottohellwig/movie-api-extension/assets/105997582/7e58ff2c-b630-4ab6-80f8-567fa4732294)
 
-- [transactions](https://knex.github.io/documentation/#Transactions)
-- [connection pooling](https://knex.github.io/documentation/#Installation-pooling)
-- [streaming queries](https://knex.github.io/documentation/#Interfaces-Streams)
-- both a [promise](https://knex.github.io/documentation/#Interfaces-Promises) and [callback](https://knex.github.io/documentation/#Interfaces-Callbacks) API
-- a [thorough test suite](https://github.com/knex/knex/actions)
+</div>
 
-Node.js versions 12+ are supported.
+## Description
 
-- Take a look at the [full documentation](https://knex.github.io/documentation) to get started!
-- Browse the [list of plugins and tools](https://github.com/knex/knex/blob/master/ECOSYSTEM.md) built for knex
-- Check out our [recipes wiki](https://github.com/knex/knex/wiki/Recipes) to search for solutions to some specific problems
-- In case of upgrading from an older version, see [migration guide](https://github.com/knex/knex/blob/master/UPGRADING.md)
+Movie API Extension is an improved version of the REST API used in the ![IMDb Clone](https://github.com/ottohellwig/imdb-clone/) project. The improvements include additional API endpoints and a new HTTP method, PUT. The backend database was extended with new tables in MySQL and now includes user profiles. Further, the other retrieval functions of the original API were replicated and Swagger documentation (YAML) was produced to accompany that. 
 
-You can report bugs and discuss features on the [GitHub issues page](https://github.com/knex/knex/issues) or send tweets to [@kibertoad](http://twitter.com/kibertoad).
+## Features
 
-For support and questions, join our [Gitter channel](https://gitter.im/tgriesser/knex).
+<details>
+  <summary>
+    <i>Click to view features</i>
+  </summary>
+  <p>
 
-For knex-based Object Relational Mapper, see:
+  - New Profile endpoint
+    - GET /user/{email}/profile
+    - PUT /user/{email}/profile
+  - Tested in Insomnia
+  - Additional profile data
+  - Swagger documentation
 
-- https://github.com/Vincit/objection.js
-- https://github.com/mikro-orm/mikro-orm
-- https://bookshelfjs.org
+  </p>
+</details>
 
-To see the SQL that Knex will generate for a given query, you can use [Knex Query Lab](https://michaelavila.com/knex-querylab/)
+## Installation
 
-## Examples
+1. Clone the repository.
+   
+   ```sh
+   git clone https://github.com/ottohellwig/movie-api-extension.git
+   ```
 
-We have several examples [on the website](http://knexjs.org). Here is the first one to get you started:
+2. Install the dependencies.
 
-```js
-const knex = require('knex')({
-  client: 'sqlite3',
-  connection: {
-    filename: './data.db',
-  },
-});
+   ```sh
+   npm install
+   ```
 
-try {
-  // Create a table
-  await knex.schema
-    .createTable('users', (table) => {
-      table.increments('id');
-      table.string('user_name');
-    })
-    // ...and another
-    .createTable('accounts', (table) => {
-      table.increments('id');
-      table.string('account_name');
-      table.integer('user_id').unsigned().references('users.id');
-    });
+3. Deploy local version.
 
-  // Then query the table...
-  const insertedRows = await knex('users').insert({ user_name: 'Tim' });
+   ```sh
+   npm start
+   ```
 
-  // ...and using the insert id, insert into the other table.
-  await knex('accounts').insert({
-    account_name: 'knex',
-    user_id: insertedRows[0],
-  });
+4. Go to `localhost:3000`.
 
-  // Query both of the rows.
-  const selectedRows = await knex('users')
-    .join('accounts', 'users.id', 'accounts.user_id')
-    .select('users.user_name as user', 'accounts.account_name as account');
+## Contributing
 
-  // map over the results
-  const enrichedRows = selectedRows.map((row) => ({ ...row, active: true }));
+Contributions (Issues/PRs/Discussions) are the driver of improvements in projects. Any contributions you make are greatly appreciated.
 
-  // Finally, add a catch statement
-} catch (e) {
-  console.error(e);
-}
-```
+## License
 
-## TypeScript example
+This work is published under [MIT License][license].
 
-```ts
-import { Knex, knex } from 'knex';
+[license]: https://github.com/ottohellwig/movie-api-extension/blob/master/LICENSE
 
-interface User {
-  id: number;
-  age: number;
-  name: string;
-  active: boolean;
-  departmentId: number;
-}
+## Note
 
-const config: Knex.Config = {
-  client: 'sqlite3',
-  connection: {
-    filename: './data.db',
-  },
-};
-
-const knexInstance = knex(config);
-
-try {
-  const users = await knex<User>('users').select('id', 'age');
-} catch (err) {
-  // error handling
-}
-```
-
-## Usage as ESM module
-
-If you are launching your Node application with `--experimental-modules`, `knex.mjs` should be picked up automatically and named ESM import should work out-of-the-box.
-Otherwise, if you want to use named imports, you'll have to import knex like this:
-
-```js
-import { knex } from 'knex/knex.mjs';
-```
-
-You can also just do the default import:
-
-```js
-import knex from 'knex';
-```
-
-If you are not using TypeScript and would like the IntelliSense of your IDE to work correctly, it is recommended to set the type explicitly:
-
-```js
-/**
- * @type {Knex}
- */
-const database = knex({
-  client: 'mysql',
-  connection: {
-    host: '127.0.0.1',
-    user: 'your_database_user',
-    password: 'your_database_password',
-    database: 'myapp_test',
-  },
-});
-database.migrate.latest();
-```
+To have the table functioning, please request a demo via an issue as the REST API is restricted with a VPN.
